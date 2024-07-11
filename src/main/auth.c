@@ -169,7 +169,7 @@ static int rad_authlog(char const *msg, REQUEST *request, int goodpass)
  *			-2 Rejected (Auth-Type = Reject, send Port-Message back)
  *			1  End check & return, don't reply
  *
- *	NOTE: NOT the same as the RLM_ values !
+ *	NOTE: NOT the same as the RLM_ values ! 处理不需要认证直接accept或rejectd的情况
  */
 static int CC_HINT(nonnull) rad_check_password(REQUEST *request)
 {
@@ -255,7 +255,7 @@ static int CC_HINT(nonnull) rad_check_password(REQUEST *request)
 	 *	status into the values as defined at
 	 *	the top of this function.
 	 */
-	result = process_authenticate(auth_type, request);
+	result = process_authenticate(auth_type, request); //调用指定的认证模块
 	switch (result) {
 	/*
 	 *	An authentication module FAIL

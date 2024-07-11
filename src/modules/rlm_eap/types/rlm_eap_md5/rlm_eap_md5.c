@@ -121,7 +121,7 @@ static int mod_process(UNUSED void *arg, eap_handler_t *handler)
 	}
 
 	/*
-	 *	Extract the EAP-MD5 packet.
+	 *	Extract the EAP-MD5 packet. 
 	 */
 	if (!(packet = eapmd5_extract(handler->eap_ds)))
 		return 0;

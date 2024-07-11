@@ -292,7 +292,7 @@ static bool already_hex(VALUE_PAIR *vp)
 
 /*
  *	Initialize a radclient data structure and add it to
- *	the global linked list.
+ *	the global linked list. 读取一对文件，从中生成请求vps和回复过滤vps
  */
 static int radclient_init(TALLOC_CTX *ctx, rc_file_pair_t *files)
 {
@@ -821,7 +821,7 @@ static void deallocate_id(rc_request_t *request)
 }
 
 /*
- *	Send one packet.
+ *	Send one packet. 分配id,生成vector,更新User-Password属性
  */
 static int send_one_packet(rc_request_t *request)
 {
@@ -1148,6 +1148,7 @@ packet_done:
 
 int main(int argc, char **argv)
 {
+	getchar();
 	int		c;
 	char		const *radius_dir = RADDBDIR;
 	char		const *dict_dir = DICTDIR;
@@ -1339,6 +1340,7 @@ int main(int argc, char **argv)
 		ERROR("Insufficient arguments");
 		usage();
 	}
+
 	/*
 	 *	Mismatch between the binary and the libraries it depends on
 	 */
@@ -1433,6 +1435,7 @@ int main(int argc, char **argv)
 	}
 
 	client_port = request_head->packet->src_port;
+
 
 #ifdef WITH_TCP
 	if (proto) {

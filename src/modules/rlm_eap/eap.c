@@ -109,7 +109,7 @@ int eap_module_instantiate(rlm_eap_t *inst, eap_module_t **m_inst, eap_type_t nu
 	method->name = eap_type2name(num);
 
 	/*
-	 *	The name of the module were trying to load
+	 *	The name of the module were trying to load 根据配置文件的模块名称组成模块动态库名称，进行动态加载
 	 */
 	mod_name = talloc_typed_asprintf(method, "rlm_eap_%s", method->name);
 
@@ -1083,7 +1083,7 @@ static EAP_DS *eap_buildds(eap_handler_t *handler,
 
 
 /*
- * If identity response then create a fresh handler & fill the identity
+ * If identity response then create a fresh handler & fill the identity，查找现有的或创建一个新的eap_handler_t，确保identity和User-Name属性相同，同时创建DS
  * else handler MUST be in our list, get that.
  * This handler creation cannot fail
  *
@@ -1176,7 +1176,7 @@ eap_handler_t *eap_handler(rlm_eap_t *inst, eap_packet_raw_t **eap_packet_p,
 		}
 
 		/*
-		 *	All fields in the handler are set to zero.
+		 *	All fields in the handler are set to zero. 如果eap type是identity，则获取其中的identity保存
 		 */
 		handler->identity = eap_identity(request, handler, eap_packet);
 		if (!handler->identity) {

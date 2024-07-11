@@ -1597,7 +1597,7 @@ int rad_vp2rfc(RADIUS_PACKET const *packet,
 	/*
 	 *	EAP-Message is special.
 	 */
-	if (vp->da->flags.concat && (vp->vp_length > 253)) {
+	if (vp->da->flags.concat && (vp->vp_length > 253)) { //将一个大avp拆分成一个或多个属性
 		return vp2attr_concat(packet, original, secret, pvp, vp->da->attr,
 				      ptr, room);
 	}
@@ -2305,7 +2305,7 @@ int rad_tlv_ok(uint8_t const *data, size_t length,
 }
 
 
-/** See if the data pointed to by PTR is a valid RADIUS packet.
+/** See if the data pointed to by PTR is a valid RADIUS packet. 填充packet结构中的radius包头信息（code, id, len, data, vector...），判断是否需要ma属性
  *
  * Packet is not 'const * const' because we may update data_len, if there's more data
  * in the UDP packet than in the RADIUS packet.
@@ -4844,7 +4844,7 @@ RADIUS_PACKET *rad_alloc(TALLOC_CTX *ctx, bool new_vector)
 	return rp;
 }
 
-/** Allocate a new RADIUS_PACKET response
+/** Allocate a new RADIUS_PACKET response，依据请求包创建回复包，参照四元组及id,vector
  *
  * @param ctx the context in which the packet is allocated. May be NULL if
  *	the packet is not associated with a REQUEST.

@@ -261,7 +261,7 @@ static void eaplist_expire(rlm_eap_t *inst, REQUEST *request, time_t timestamp)
  *	Add a handler to the set of active sessions.
  *
  *	Since we're adding it to the list, we guess that this means
- *	the packet needs a State attribute.  So add one.
+ *	the packet needs a State attribute.  So add one. //增加state属性，同时将该user(session)的eap_handler_t添加到管理，方便认证后续过程的状态维持
  */
 int eaplist_add(rlm_eap_t *inst, eap_handler_t *handler)
 {

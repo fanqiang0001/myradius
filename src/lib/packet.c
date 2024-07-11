@@ -249,7 +249,7 @@ typedef struct fr_packet_socket_t {
 	int		proto;
 #endif
 
-	uint8_t		id[32];
+	uint8_t		id[32]; //一共256位，被使用了的位置1，位索引表示请求id
 } fr_packet_socket_t;
 
 
@@ -263,14 +263,14 @@ typedef struct fr_packet_socket_t {
  *	that should be managed.
  */
 struct fr_packet_list_t {
-	rbtree_t	*tree;
+	rbtree_t	*tree; //节点数据是请求包RADIUS_PACKET *的地址，实际对应的是rc_transaction_t *
 
 	int		alloc_id;
 	uint32_t	num_outgoing;
 	int		last_recv;
 	int		num_sockets;
 
-	fr_packet_socket_t sockets[MAX_SOCKETS];
+	fr_packet_socket_t sockets[MAX_SOCKETS]; //每条链接可管理的请求数有限制，两端可使用不同端口建立多条链接供请求发送者使用，选择一条可用的链接发送请求
 };
 
 
@@ -609,7 +609,7 @@ uint32_t fr_packet_list_num_elements(fr_packet_list_t *pl)
  *	outgoing socket.  The request MAY also have src_ipaddr set.
  *
  *	We also assume that the sender doesn't care which protocol
- *	should be used.
+ *	should be used. 将该请求分配到哪条链接，同时分配请求id
  */
 bool fr_packet_list_id_alloc(fr_packet_list_t *pl, int proto,
 			    RADIUS_PACKET **request_p, void **pctx)
@@ -761,19 +761,19 @@ bool fr_packet_list_id_alloc(fr_packet_list_t *pl, int proto,
 		 */
 
 		/*
-		 *	Look for a free Id, starting from a random number.
+		 *	Look for a free Id, starting from a random number.1.先找哪个字节有空闲
 		 */
 		start_j = fr_rand() & 0x1f;
 #define ID_j ((j + start_j) & 0x1f)
 		for (j = 0; j < 32; j++) {
 			if (ps->id[ID_j] == 0xff) continue;
 
-
+			//2.再找哪个字节位有空闲，使用置1；空闲置0
 			start_k = fr_rand() & 0x07;
 #define ID_k ((k + start_k) & 0x07)
 			for (k = 0; k < 8; k++) {
 				if ((ps->id[ID_j] & (1 << ID_k)) != 0) continue;
-
+				//3.置位为1，得到id(位索引)
 				ps->id[ID_j] |= (1 << ID_k);
 				id = (ID_j * 8) + ID_k;
 				fd = i;

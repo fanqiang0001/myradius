@@ -119,7 +119,7 @@ extern const FR_NAME_NUMBER eap_rcode_table[];
 /** EAP-Type specific data
  */
 typedef struct eap_type_data {
-	eap_type_t	num;
+	eap_type_t	num; 
 	size_t		length;
 	uint8_t		*data;
 } eap_type_data_t;
@@ -133,9 +133,9 @@ typedef struct eap_packet {
 	eap_code_t	code;
 	uint8_t		id;
 	size_t		length;
-	eap_type_data_t	type;
+	eap_type_data_t	type; //不包含eap头payload部分
 
-	uint8_t		*packet;
+	uint8_t		*packet; //EAP-MESSAGE属性数据部分（包含eap头和数据部分），也即eap_packet_raw_t类型，存储为eap的网络格式
 } eap_packet_t;
 
 /** Structure to represent packet format of eap *on wire*

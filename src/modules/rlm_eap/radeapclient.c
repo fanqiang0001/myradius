@@ -108,14 +108,14 @@ typedef struct rc_eap_context {
 struct rc_input_vps_list {
 	rc_input_vps_t *head;
 	rc_input_vps_t *tail;
-	uint32_t size;
+	uint32_t size; //数据块数量，空行分割前后两块
 };
 
 /** Structure which holds an input vps entry (read from file or stdin),
  *  and linkage to previous / next entries.
  */
 struct rc_input_vps {
-	uint32_t num;	//!< The number (within the file) of the input we're reading.
+	uint32_t num;	//!< The number (within the file) of the input we're reading. 文件中读取的块的编号，从1开始顺序编号
 
 	VALUE_PAIR *vps_in;	//!< the list of attribute/value pairs.
 
@@ -1382,7 +1382,7 @@ static int rc_send_one_packet(rc_transaction_t *trans, RADIUS_PACKET **packet_p)
 				exit(1);
 			}
 
-			/* Could not find a free packet ID. Allocate a new socket, then try again. */
+			/* Could not find a free packet ID. Allocate a new socket, then try again. 没有可以发送请求的链接，则创建一个新链接 */
 			rc_add_socket(&packet->src_ipaddr, packet->src_port, &packet->dst_ipaddr, packet->dst_port);
 
 			nb_sock_add ++;
@@ -1432,7 +1432,7 @@ static int rc_send_transaction_packet(rc_transaction_t *trans, RADIUS_PACKET **p
 	return ret;
 }
 
-/** Deallocate RADIUS packet ID.
+/** Deallocate RADIUS packet ID. 释放回复包，情况请求包的数据部分（不清空vps），清空id位
  */
 static void rc_deallocate_id(rc_transaction_t *trans)
 {
@@ -1563,7 +1563,7 @@ static int rc_recv_one_packet(struct timeval *tv_wait_time)
 	trans->reply = reply;
 	reply = NULL;
 
-	if (rad_decode(trans->reply, trans->packet, secret) != 0) {
+	if (rad_decode(trans->reply, trans->packet, secret) != 0) { // 将网络数据包解析为AVP
 		/* This can fail if packet contains too many attributes. */
 		DEBUG("Failed decoding reply\n");
 		goto packet_done;
@@ -1595,7 +1595,7 @@ static int rc_recv_one_packet(struct timeval *tv_wait_time)
 			break;
 
 		case PW_EAP_TYPE_BASE + PW_EAP_MD5:
-			if (rc_respond_eap_md5(trans->eap_context, trans->reply, trans->packet) && trans->eap_context->eap.md5.tried < 3)
+			if (rc_respond_eap_md5(trans->eap_context, trans->reply, trans->packet) && trans->eap_context->eap.md5.tried < 3) //生成md5挑战回复包
 			{
 				/* answer the challenge from server. */
 				trans->eap_context->eap.md5.tried ++;
@@ -1886,6 +1886,7 @@ static void rc_resolve_hostname(char *server_arg)
 
 int main(int argc, char **argv)
 {
+	getchar();
 	char *p;
 	int c;
 	char *filename = NULL;
@@ -2199,7 +2200,7 @@ static void rc_unmap_eap_methods(RADIUS_PACKET *rep)
 	if (!rep) return;
 
 	/* find eap message */
-	e = eap_vp2packet(NULL, rep->vps);
+	e = eap_vp2packet(NULL, rep->vps); //将多个EAP-MESSAGE属性合并成eap协议包格式
 	if (!e) {
 		ERROR("failed decoding EAP: %s\n", fr_strerror());
 		return;

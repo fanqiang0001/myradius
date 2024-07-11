@@ -44,7 +44,7 @@ struct radclient_list {
 	/*
 	 *	FIXME: One set of trees for IPv4, and another for IPv6?
 	 */
-	rbtree_t	*trees[129]; /* for 0..128, inclusive. */
+	rbtree_t	*trees[129]; /* for 0..128, inclusive. */ //存储的节点为RADCLIENT*
 	uint32_t       	min_prefix;
 };
 

@@ -1,0 +1,8 @@
+User-Name = "xabcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddxyz"
+ClearText-Password = "123"
+NAS-IP-Address = 10.1.1.1
+EAP-Code = Response
+EAP-Id = 210
+EAP-Type-Identity = "xabcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddxyz"
+Message-Authenticator = 0x00
+NAS-Port = 0 

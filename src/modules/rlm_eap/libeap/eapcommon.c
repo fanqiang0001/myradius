@@ -123,7 +123,7 @@ char const *eap_type2name(eap_type_t method)
  *
  * OUTPUT reply->packet is setup with wire format, and will
  *		      be allocated to the right size.
- *
+ *eap数据格式转换为网络数据包格式后，填充eap_packet_t.packet字段
  */
 int eap_wireformat(eap_packet_t *reply)
 {
@@ -194,14 +194,14 @@ int eap_basic_compose(RADIUS_PACKET *packet, eap_packet_t *reply)
 	eap_packet_raw_t *eap_packet;
 	int rcode;
 
-	if (eap_wireformat(reply) == EAP_INVALID) {
+	if (eap_wireformat(reply) == EAP_INVALID) { //转换为网络数据包格式后，填充eap_packet_t.packet字段
 		return RLM_MODULE_INVALID;
 	}
 	eap_packet = (eap_packet_raw_t *)reply->packet;
 
 	fr_pair_delete_by_num(&(packet->vps), PW_EAP_MESSAGE, 0, TAG_ANY);
 
-	vp = eap_packet2vp(packet, eap_packet);
+	vp = eap_packet2vp(packet, eap_packet); //将eap网络数据格式拆分为多个eap-message属性中
 	if (!vp) return RLM_MODULE_INVALID;
 	fr_pair_add(&(packet->vps), vp);
 
@@ -292,7 +292,7 @@ VALUE_PAIR *eap_packet2vp(RADIUS_PACKET *packet, eap_packet_raw_t const *eap)
  * ie concatenates all to get the complete EAP packet.
  *
  * NOTE: Sometimes Framed-MTU might contain the length of EAP-Message,
- *      refer fragmentation in rfc2869.
+ *      refer fragmentation in rfc2869.//将多个EAP-MESSAGE属性合并成eap协议包格式，然后方便拆解为多个eap属性
  */
 eap_packet_raw_t *eap_vp2packet(TALLOC_CTX *ctx, VALUE_PAIR *vps)
 {

@@ -573,11 +573,11 @@ int paircompare(REQUEST *request, VALUE_PAIR *req_list, VALUE_PAIR *check,
 		radius_xlat_do(request, check_item);
 
 		/*
-		 *	OK it is present now compare them.
+		 *	OK it is present now compare them. 先比较得到结果存放compare
 		 */
 		compare = radius_callback_compare(request, auth_item,
 						  check_item, check, rep_list);
-
+		//再根据检测要求与compare比较得出是否符合条件
 		switch (check_item->op) {
 		case T_OP_EQ:
 		default:

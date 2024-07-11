@@ -1,0 +1,11 @@
+Packet-Type = CoA-Request
+User-Name = "xabcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddxyz"
+Filter-Id = "acl_group_1234"
+NAS-IP-Address = 10.1.1.1
+Acct-Session-Id = "5f4dcc3b5aa765d61d8327deb882cf99"
+
+Packet-Type = Disconnect-Request
+User-Name = "xabcddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddxyz"
+Filter-Id = "acl_group_1234"
+NAS-IP-Address = 10.1.1.1
+Acct-Session-Id = "5f4dcc3b5aa765d61d8327deb882cf99"

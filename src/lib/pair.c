@@ -1833,7 +1833,7 @@ FR_TOKEN fr_pair_raw_from_str(char const **ptr, VALUE_PAIR_RAW *raw)
 /** Read one line of attribute/value pairs into a list.
  *
  * The line may specify multiple attributes separated by commas.
- *
+ * 解析逗号分割的多个属性文本行
  * @note If the function returns T_INVALID, an error has occurred and
  * @note the valuepair list should probably be freed.
  *
@@ -1929,7 +1929,7 @@ int fr_pair_list_afrom_file(TALLOC_CTX *ctx, VALUE_PAIR **out, FILE *fp, bool *p
 		 *      If we get a '\n' by itself, we assume that's
 		 *      the end of that VP
 		 */
-		if (buf[0] == '\n') {
+		if (buf[0] == '\n') { //空行表示一个包的属性结束
 			if (vp) {
 				*pfiledone = false;
 				return 0;
@@ -1943,7 +1943,7 @@ int fr_pair_list_afrom_file(TALLOC_CTX *ctx, VALUE_PAIR **out, FILE *fp, bool *p
 		if (buf[0] == '#') continue;
 
 		/*
-		 *	Read all of the attributes on the current line.
+		 *	Read all of the attributes on the current line. 一行可能包含多个属性
 		 */
 		vp = NULL;
 		last_token = fr_pair_list_afrom_str(ctx, buf, &vp);

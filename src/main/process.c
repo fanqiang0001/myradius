@@ -1041,7 +1041,7 @@ static bool request_max_time(REQUEST *request)
 	STATE_MACHINE_TIMER(FR_ACTION_TIMER);
 	return false;
 }
-
+//将请求加入定时器队列，防止处理超时，同时处理请求
 static void request_queue_or_run(REQUEST *request,
 				 fr_request_process_t process)
 {
@@ -1613,7 +1613,7 @@ static void request_running(REQUEST *request, int action)
 		break;
 
 	case FR_ACTION_RUN:
-		if (!request_pre_handler(request, action)) {
+		if (!request_pre_handler(request, action)) { //解析请求包到vp，填充username字段
 #ifdef DEBUG_STATE_MACHINE
 			if (rad_debug_lvl) printf("(%u) ********\tSTATE %s failed in pre-handler C-%s -> C-%s\t********\n",
 					       request->number, __FUNCTION__,
@@ -1625,7 +1625,7 @@ static void request_running(REQUEST *request, int action)
 		}
 
 		rad_assert(request->handle != NULL);
-		request->handle(request);
+		request->handle(request); //生成回复包
 
 #ifdef WITH_PROXY
 		/*
@@ -1658,7 +1658,7 @@ static void request_running(REQUEST *request, int action)
 #ifdef WITH_PROXY
 		req_finished:
 #endif
-			request_finish(request, action);
+			request_finish(request, action); //发送回复包
 		}
 		break;
 
@@ -1704,7 +1704,7 @@ int request_receive(TALLOC_CTX *ctx, rad_listen_t *listener, RADIUS_PACKET *pack
 	 */
 	if (listener->nodup) goto skip_dup;
 
-	packet_p = rbtree_finddata(pl, &packet);
+	packet_p = rbtree_finddata(pl, &packet); //除了4元组比较，重要的是比较请求的id是否相等，不比较vector
 	if (packet_p) {
 		rad_child_state_t child_state;
 		char const *old_module;

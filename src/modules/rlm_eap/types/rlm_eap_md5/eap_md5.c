@@ -45,7 +45,7 @@ RCSID("$Id$")
 #include <freeradius-devel/md5.h>
 
 /*
- *	We expect only RESPONSE for which SUCCESS or FAILURE is sent back
+ *	We expect only RESPONSE for which SUCCESS or FAILURE is sent back 将网络格式转换为数据结构
  */
 MD5_PACKET *eapmd5_extract(EAP_DS *eap_ds)
 {
@@ -176,7 +176,7 @@ int eapmd5_verify(MD5_PACKET *packet, VALUE_PAIR* password,
 
 /*
  *	Compose the portions of the reply packet specific to the
- *	EAP-MD5 protocol, in the EAP reply typedata
+ *	EAP-MD5 protocol, in the EAP reply typedata 将eap结构体reply，转换为网络格式存放在eap_ds->request中
  */
 int eapmd5_compose(EAP_DS *eap_ds, MD5_PACKET *reply)
 {

@@ -95,6 +95,7 @@ static void sig_hup (int);
  */
 int main(int argc, char *argv[])
 {
+	getchar();
 	int rcode = EXIT_SUCCESS;
 	int status;
 	int argval;

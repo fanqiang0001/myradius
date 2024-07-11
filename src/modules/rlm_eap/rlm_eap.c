@@ -291,7 +291,7 @@ static rlm_rcode_t CC_HINT(nonnull) mod_authenticate(void *instance, REQUEST *re
 	 *	Select the appropriate method or default to the
 	 *	configured one
 	 */
-	status = eap_method_select(inst, handler);
+	status = eap_method_select(inst, handler); //确定eap子认证方式，调用认证子模块生成待回复的数据
 
 	/*
 	 *	If it failed, die.
@@ -374,7 +374,7 @@ static rlm_rcode_t CC_HINT(nonnull) mod_authenticate(void *instance, REQUEST *re
 	 *	We are done, wrap the EAP-request in RADIUS to send
 	 *	with all other required radius attributes
 	 */
-	rcode = eap_compose(handler);
+	rcode = eap_compose(handler); //将待回复的eap数据(handler->eap_ds->request)封装到eap-message vp中，同时根据eap code设置radius code
 
 	/*
 	 *	Add to the list only if it is EAP-Request, OR if

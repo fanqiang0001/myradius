@@ -45,7 +45,7 @@ RCSIDH(eap_h, "$Id$")
  *  we send EAP-Request/EAP-success/EAP-failure
  */
 typedef struct eap_ds {
-	eap_packet_t	*response;
+	eap_packet_t	*response; //eap response, 客户端发送给服务端的报文
 	eap_packet_t	*request;
 	int		set_request_id;
 } EAP_DS;

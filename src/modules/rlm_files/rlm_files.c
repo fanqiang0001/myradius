@@ -377,7 +377,7 @@ static rlm_rcode_t file_common(rlm_files_t *inst, REQUEST *request, char const *
 	default_pl = rbtree_finddata(tree, &my_pl);
 
 	/*
-	 *	Find the entry for the user.
+	 *	Find the entry for the user. 遍历匹配该用户的所有记录
 	 */
 	while (user_pl || default_pl) {
 		vp_cursor_t cursor;
@@ -405,7 +405,7 @@ static rlm_rcode_t file_common(rlm_files_t *inst, REQUEST *request, char const *
 		}
 
 		check_tmp = fr_pair_list_copy(request, pl->check);
-		for (vp = fr_cursor_init(&cursor, &check_tmp);
+		for (vp = fr_cursor_init(&cursor, &check_tmp);//展开所有待检测的vps
 		     vp;
 		     vp = fr_cursor_next(&cursor)) {
 			if (radius_xlat_do(request, vp) < 0) {
@@ -414,7 +414,7 @@ static rlm_rcode_t file_common(rlm_files_t *inst, REQUEST *request, char const *
 				continue;
 			}
 		}
-
+		//对比请求vps和检测vps是否匹配
 		if (paircompare(request, request_packet->vps, check_tmp, &reply_packet->vps) == 0) {
 			RDEBUG2("%s: Matched entry %s at line %d", filename, pl->name, pl->lineno);
 			found = true;

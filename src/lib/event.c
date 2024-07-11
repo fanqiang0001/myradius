@@ -40,7 +40,7 @@ RCSID("$Id$")
 typedef struct fr_event_fd_t {
 	int			fd;
 	fr_event_fd_handler_t	handler;
-	void			*ctx;
+	void			*ctx; // rad_listen_t
 } fr_event_fd_t;
 
 #define FR_EV_MAX_FDS (512)

@@ -18,7 +18,7 @@ struct fr_heap_t {
 	int num_elements;
 	size_t offset;
 	fr_heap_cmp_t cmp;
-	void **p;
+	void **p; //fr_event_t *สýื้
 };
 
 /*
