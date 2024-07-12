@@ -169,7 +169,7 @@ static int rad_authlog(char const *msg, REQUEST *request, int goodpass)
  *			-2 Rejected (Auth-Type = Reject, send Port-Message back)
  *			1  End check & return, don't reply
  *
- *	NOTE: NOT the same as the RLM_ values ! 处理不需要认证直接accept或rejectd的情况
+ *	NOTE: NOT the same as the RLM_ values ! 处理不需要认证直接accept或reject的情况
  */
 static int CC_HINT(nonnull) rad_check_password(REQUEST *request)
 {

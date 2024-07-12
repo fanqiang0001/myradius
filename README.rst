@@ -177,3 +177,106 @@ are available from `Network RADIUS <https://networkradius.com>`_.
 
 .. |BuildStatus| image:: https://travis-ci.org/FreeRADIUS/freeradius-server.png?branch=v3.0.x
 .. _BuildStatus: https://travis-ci.org/FreeRADIUS/freeradius-server
+
+
+
+主要代码分析
+流程
+================================================================================================
+客户端
+接收流程
+recv
+rad_verify //验签两个authenticate
+rad_decode //avp数据流转属性对
+rc_unmap_eap_methods eap-message转多eap属性
+	eap_vp2packet //将多个EAP-MESSAGE属性合并成eap协议包格式，然后方便拆解为多个eap属性
+	???
+
+
+发送流程
+rc_build_eap_context //eap属性转eap-message
+	rc_map_eap_methods
+		eap_basic_compose
+			eap_wireformat //eap数据格式转换为网络数据包格式后，填充eap_packet_t.packet字段
+			eap_packet2vp //根据eap网络数据包格式(eap_packet_t.packet字段)分为多个eap-message
+rad_encode //属性对转avp数据流
+rad_sign //两个authenticate
+send
+
+================================================================================================
+服务端
+接收流程
+auth_socket_recv
+	rad_recv_header
+	rad_recv
+	request_receive
+		request_running
+			request_pre_handler
+				client_socket_decode
+					rad_verify
+					rad_decode
+			rad_authenticate 流程控制
+				process_authorize
+				rad_check_password
+					process_authenticate
+						mod_authenticate
+							eap_vp2packet
+							eap_compose 
+								eap_wireformat
+			request_finish
+				rad_postauth
+					process_post_auth
+				rad_send
+					
+
+
+acct_socket_recv
+	rad_recv_header
+	rad_recv
+	request_receive
+		request_running
+			request_pre_handler
+				client_socket_decode
+					rad_verify
+					rad_decode
+			rad_accounting
+				module_preacct
+				process_accounting
+			request_finish
+				rad_send			
+			
+	
+coa_socket_recv
+	rad_recv_header
+	rad_recv
+	request_receive
+		request_running
+			request_pre_handler
+				client_socket_decode
+					rad_verify
+					rad_decode
+			rad_coa_recv
+				process_recv_coa
+				process_send_coa 发送前处理
+			request_finish
+				rad_send		
+	
+发送流程
+request_running
+	request_finish
+		rad_send
+			rad_encode
+			rad_sign
+			send
+			
+			
+			
+重要模块依赖			
+pair->dict->hash		
+			
+			
+fr_event_list_t
+	fr_event_fd_t[]
+		rad_listen_t
+			ops(send,recv...)
+			listen_socket_t
